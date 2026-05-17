@@ -6,6 +6,13 @@ use chip8::{Chip8, Chip8Config};
 use minifb::{Key, Window, WindowOptions};
 
 fn main() {
+    let args: Vec<String> = std::env::args().collect();
+
+    if args.len() < 2 {
+        println!("Usage: chip8 <ROM-file-path>");
+        std::process::exit(1);
+    }
+
     let mut machine = Chip8::new();
 
     /*machine.config = Chip8Config {
@@ -13,7 +20,8 @@ fn main() {
         ..Chip8Config::default()
     };*/
 
-    if let Err(e) = machine.load_program_from_file("./roms/Cave.ch8") {
+    let rom_path = &args[1];
+    if let Err(e) = machine.load_program_from_file(rom_path) {
         eprintln!("Error: failed to load ROM {}", e);
         std::process::exit(1);
     }
@@ -61,5 +69,7 @@ fn main() {
                 machine.step();
             }
         }
+
+        window.update();
     }
 }
